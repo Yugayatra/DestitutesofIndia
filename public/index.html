@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destitutes of India - Meet The Destitutes of India</title>
+    <meta name="description" content="Documenting and helping destitutes across India. Take pictures, share locations, and make a difference.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-container" style="justify-content: flex-start;">
+                <img src="/images/logo.png" alt="Destitutes of India Logo" class="logo" id="logo">
+            </div>
+            <h1 class="main-tagline">Meet The Destitutes of India</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+                <li><a href="/mission">Mission & Vision</a></li>
+                <li><a href="/donate">Donate</a></li>
+            </ul>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Hero Logo -->
+            <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+                <img src="/images/logo.png" alt="Destitutes of India Logo" style="max-width: 220px; width: 100%; height: auto;">
+            </div>
+            <!-- Main Action Card -->
+            <div class="action-card" id="actionCard">
+                <div class="card-content">
+                    <i class="fas fa-camera card-icon"></i>
+                    <h2 class="card-title">FOUND A DESTITUTE</h2>
+                    <p class="card-subtitle">Take Picture</p>
+                    <button class="btn-primary" id="takePictureBtn">
+                        <i class="fas fa-camera"></i>
+                        Open Camera
+                    </button>
+                </div>
+            </div>
+
+            <!-- Camera Interface (Hidden by default) -->
+            <div class="camera-interface" id="cameraInterface" style="display: none;">
+                <div class="camera-container">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <div class="camera-controls">
+                        <button class="btn-capture" id="captureBtn">
+                            <i class="fas fa-camera"></i>
+                            Capture Photo
+                        </button>
+                        <button class="btn-cancel" id="cancelBtn">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Interface (Hidden by default) -->
+            <div class="preview-interface" id="previewInterface" style="display: none;">
+                <div class="preview-container">
+                    <img id="previewImage" alt="Captured photo">
+                    <div class="location-info" id="locationInfo">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="locationText">Getting location...</span>
+                    </div>
+                    <div class="preview-controls">
+                        <button class="btn-post" id="postBtn">
+                            <i class="fas fa-upload"></i>
+                            Post it
+                        </button>
+                        <button class="btn-retake" id="retakeBtn">
+                            <i class="fas fa-redo"></i>
+                            Retake
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery Section -->
+            <section class="gallery-section">
+                <h2 class="section-title">Recent Posts</h2>
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Posts will be loaded here dynamically -->
+                </div>
+                <div class="loading-spinner" id="loadingSpinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Loading posts...</span>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="/disclaimer">Disclaimer</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/terms">Terms of Use</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" title="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <p>© 2024 YugaYatra Retail (Opc) Pvt Ltd</p>
+                    <p>Developed by YugaYatra Retail (Opc) Pvt Ltd</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Location Permission Modal -->
+    <div class="modal" id="locationModal">
+        <div class="modal-content">
+            <h3>Location Permission Required</h3>
+            <p>To post a picture, we need access to your location to ensure authenticity and provide accurate location data.</p>
+            <div class="modal-buttons">
+                <button class="btn-primary" id="enableLocationBtn">Enable Location</button>
+                <button class="btn-secondary" id="cancelLocationBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h3>Posted Successfully!</h3>
+            <p>Your post has been uploaded and is now visible on the homepage.</p>
+            <button class="btn-primary" id="closeSuccessBtn">Close</button>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html> 

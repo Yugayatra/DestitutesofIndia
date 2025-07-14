@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate - Destitutes of India</title>
+    <meta name="description" content="Support our mission to help destitutes across India. Make a donation today.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo-frame">
+                    <img src="/images/logo.png" alt="YugaYatra Retail Logo" class="logo" id="logo">
+                    <div class="logo-placeholder">
+                        <i class="fas fa-building"></i>
+                        <span>YugaYatra Retail</span>
+                    </div>
+                </div>
+            </div>
+            <h1 class="main-tagline">Meet The Destitutes of India</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+                <li><a href="/mission">Mission & Vision</a></li>
+                <li><a href="/donate" class="active">Donate</a></li>
+            </ul>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="donate-content">
+                <h1 class="page-title">Support Our Mission</h1>
+                
+                <div class="donate-text">
+                    <p>Your generous donation helps us continue our vital work of documenting and supporting destitutes across India. Every contribution, no matter how small, makes a significant difference in someone's life.</p>
+                    
+                    <p>Your donation will be used to:</p>
+                    <ul class="donation-benefits">
+                        <li><i class="fas fa-check-circle"></i> Expand our platform coverage to more cities</li>
+                        <li><i class="fas fa-check-circle"></i> Provide immediate assistance to destitutes</li>
+                        <li><i class="fas fa-check-circle"></i> Support rehabilitation and medical programs</li>
+                        <li><i class="fas fa-check-circle"></i> Develop partnerships with NGOs and healthcare providers</li>
+                        <li><i class="fas fa-check-circle"></i> Maintain and improve our technology platform</li>
+                        <li><i class="fas fa-check-circle"></i> Train volunteers and community workers</li>
+                    </ul>
+                    
+                    <p>Scan the QR code below to make a secure donation through UPI or other payment methods. Your contribution is tax-deductible and will be used transparently for our mission.</p>
+                </div>
+
+                <div class="qr-container">
+                    <div class="qr-code" id="qrCode">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <p class="qr-text">Scan to donate via UPI</p>
+                    <button class="btn-primary" id="scanQRBtn">
+                        <i class="fas fa-qrcode"></i>
+                        Scan QR Code
+                    </button>
+                </div>
+
+                <div class="donation-options">
+                    <h3>Other Ways to Donate</h3>
+                    <div class="payment-methods">
+                        <div class="payment-method">
+                            <i class="fas fa-university"></i>
+                            <h4>Bank Transfer</h4>
+                            <p>Account: YugaYatra Retail (Opc) Pvt Ltd</p>
+                            <p>Account No: 1234567890</p>
+                            <p>IFSC: YUGA0001234</p>
+                        </div>
+                        <div class="payment-method">
+                            <i class="fas fa-credit-card"></i>
+                            <h4>Online Payment</h4>
+                            <p>PayPal: donate@destitutesofindia.com</p>
+                            <p>Razorpay: Available on our app</p>
+                            <p>Stripe: Secure card payments</p>
+                        </div>
+                        <div class="payment-method">
+                            <i class="fas fa-mobile-alt"></i>
+                            <h4>UPI Payment</h4>
+                            <p>UPI ID: yugayatra@upi</p>
+                            <p>PhonePe: +91 98765 43210</p>
+                            <p>Google Pay: Available</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="donation-impact">
+                    <h3>Your Impact</h3>
+                    <div class="impact-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">₹500</div>
+                            <div class="stat-label">Provides one week of meals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">₹1,000</div>
+                            <div class="stat-label">Medical checkup and medicines</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">₹2,500</div>
+                            <div class="stat-label">Rehabilitation program support</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">₹5,000</div>
+                            <div class="stat-label">Complete care for one month</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transparency-section">
+                    <h3><i class="fas fa-chart-pie"></i> Transparency & Accountability</h3>
+                    <p>We believe in complete transparency. All donations are tracked and reported quarterly. You can view our financial reports and impact metrics on our website. Every rupee is accounted for and used efficiently to maximize our impact.</p>
+                    
+                    <div class="transparency-features">
+                        <div class="feature">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Quarterly Reports</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Impact Metrics</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-eye"></i>
+                            <span>Real-time Updates</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-certificate"></i>
+                            <span>Tax Deductible</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- QR Scanner Modal -->
+    <div class="modal" id="qrScannerModal">
+        <div class="modal-content">
+            <h3>QR Code Scanner</h3>
+            <div class="scanner-container">
+                <video id="scannerVideo" autoplay playsinline></video>
+                <canvas id="scannerCanvas" style="display: none;"></canvas>
+                <div class="scanner-overlay">
+                    <div class="scanner-frame"></div>
+                </div>
+            </div>
+            <div class="scanner-controls">
+                <button class="btn-primary" id="startScannerBtn">
+                    <i class="fas fa-play"></i>
+                    Start Scanner
+                </button>
+                <button class="btn-secondary" id="closeScannerBtn">
+                    <i class="fas fa-times"></i>
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="/disclaimer">Disclaimer</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/terms">Terms of Use</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" title="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <p>© 2024 YugaYatra Retail (Opc) Pvt Ltd</p>
+                    <p>Developed by YugaYatra Retail (Opc) Pvt Ltd</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/donate.js"></script>
+</body>
+</html> 
