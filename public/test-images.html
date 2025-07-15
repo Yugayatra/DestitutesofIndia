@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Test - Destitutes of India</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .image-test {
+            margin: 10px 0;
+        }
+        .image-test img {
+            max-width: 200px;
+            max-height: 200px;
+            border: 1px solid #ccc;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Loading Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Logo Image</h2>
+        <div class="image-test">
+            <p>Testing logo image: <code>/images/logo.png</code></p>
+            <img src="/images/logo.png" alt="Logo" onload="this.nextElementSibling.textContent='✅ Loaded successfully'" onerror="this.nextElementSibling.textContent='❌ Failed to load'">
+            <span class="status"></span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test Uploads Directory</h2>
+        <div class="image-test">
+            <p>Testing uploads directory access: <code>/uploads/</code></p>
+            <p>Directory contents will be listed below:</p>
+            <div id="uploads-list">Loading...</div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test Posts API</h2>
+        <div class="image-test">
+            <p>Testing posts API: <code>/api_posts.php</code></p>
+            <button onclick="testPostsAPI()">Test Posts API</button>
+            <div id="posts-result">Click button to test</div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Manual Image Test</h2>
+        <div class="image-test">
+            <p>Enter an image filename from uploads folder:</p>
+            <input type="text" id="imageFilename" placeholder="e.g., img_123456.jpg" style="width: 200px;">
+            <button onclick="testImage()">Test Image</button>
+            <div id="manual-test-result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Test posts API
+        async function testPostsAPI() {
+            const resultDiv = document.getElementById('posts-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('api_posts.php');
+                const posts = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="success">✅ API responded successfully</div>
+                    <pre>${JSON.stringify(posts, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ API error: ${error.message}</div>`;
+            }
+        }
+
+        // Test manual image
+        function testImage() {
+            const filename = document.getElementById('imageFilename').value;
+            const resultDiv = document.getElementById('manual-test-result');
+            
+            if (!filename) {
+                resultDiv.innerHTML = '<div class="error">Please enter a filename</div>';
+                return;
+            }
+
+            const imgPath = `/uploads/${filename}`;
+            resultDiv.innerHTML = `
+                <p>Testing image: <code>${imgPath}</code></p>
+                <img src="${imgPath}" alt="Test" style="max-width: 200px; max-height: 200px;" 
+                     onload="this.nextElementSibling.textContent='✅ Image loaded successfully'" 
+                     onerror="this.nextElementSibling.textContent='❌ Image failed to load'">
+                <span class="status"></span>
+            `;
+        }
+
+        // Load uploads directory listing
+        async function loadUploadsList() {
+            const listDiv = document.getElementById('uploads-list');
+            try {
+                // Try to fetch a directory listing (this might not work on all servers)
+                const response = await fetch('uploads/');
+                if (response.ok) {
+                    const text = await response.text();
+                    listDiv.innerHTML = `<pre>${text}</pre>`;
+                } else {
+                    listDiv.innerHTML = '<div class="error">Cannot access uploads directory listing</div>';
+                }
+            } catch (error) {
+                listDiv.innerHTML = `<div class="error">Error accessing uploads: ${error.message}</div>`;
+            }
+        }
+
+        // Load uploads list on page load
+        loadUploadsList();
+    </script>
+</body>
+</html> 

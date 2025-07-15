@@ -79,7 +79,7 @@ async function startCamera() {
             return;
         }
 
-        // Get current location
+        // Get fresh current location (don't use cached location)
         await getCurrentLocation();
 
         // Start camera
@@ -157,37 +157,66 @@ function getCurrentLocation() {
             (position) => {
                 currentLocation = {
                     latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
+                    longitude: position.coords.longitude,
+                    accuracy: position.coords.accuracy
                 };
+                
+                console.log('Location captured:', currentLocation); // Debug log
                 
                 // Get address from coordinates
                 getAddressFromCoordinates(currentLocation.latitude, currentLocation.longitude)
                     .then(address => {
                         currentLocation.address = address;
                         locationText.textContent = address;
+                        console.log('Address resolved:', address); // Debug log
                         resolve();
                     })
-                    .catch(() => {
-                        currentLocation.address = `${currentLocation.latitude}, ${currentLocation.longitude}`;
+                    .catch((error) => {
+                        console.error('Address lookup failed:', error);
+                        currentLocation.address = `${currentLocation.latitude.toFixed(6)}, ${currentLocation.longitude.toFixed(6)}`;
                         locationText.textContent = currentLocation.address;
                         resolve();
                     });
             },
             (error) => {
                 console.error('Error getting location:', error);
+                let errorMessage = 'Unable to get location. ';
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage += 'Please enable location permissions.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage += 'Location information unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage += 'Location request timed out.';
+                        break;
+                    default:
+                        errorMessage += 'Unknown error occurred.';
+                }
+                alert(errorMessage);
                 reject(error);
             },
             {
                 enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 60000
+                timeout: 15000,
+                maximumAge: 0 // Don't use cached location, always get fresh data
             }
         );
     });
 }
 
+// Function to refresh location data
+async function refreshLocation() {
+    if (currentLocation) {
+        console.log('Refreshing location data...');
+        await getCurrentLocation();
+    }
+}
+
 async function getAddressFromCoordinates(lat, lng) {
     try {
+        // First try with Google Geocoding API
         const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyBWk1Vc65ce2-gomR_OfqTD7D1unkQ6Ak`);
         const data = await response.json();
         
@@ -195,10 +224,19 @@ async function getAddressFromCoordinates(lat, lng) {
             return data.results[0].formatted_address;
         }
         
-        return `${lat}, ${lng}`;
+        // Fallback to reverse geocoding with OpenStreetMap
+        const osmResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
+        const osmData = await osmResponse.json();
+        
+        if (osmData.display_name) {
+            return osmData.display_name;
+        }
+        
+        // Final fallback
+        return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
     } catch (error) {
         console.error('Error getting address:', error);
-        return `${lat}, ${lng}`;
+        return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
     }
 }
 
@@ -273,8 +311,8 @@ async function postImage() {
         capturedImage = null;
         currentLocation = null;
         
-        // Reload posts (optional, if you implement a gallery)
-        // loadPosts();
+        // Reload posts to show the new post
+        await loadPosts();
         
     } catch (error) {
         console.error('Error posting image:', error);
@@ -304,12 +342,15 @@ async function loadPosts() {
         if (!response.ok) throw new Error('Network response was not ok');
         const posts = await response.json();
 
+        console.log('Loaded posts:', posts); // Debug log
+
         if (!posts || posts.length === 0) {
             galleryGrid.innerHTML = '<div class="no-posts">No posts yet. Be the first to share!</div>';
             return;
         }
 
         posts.reverse().forEach(post => {
+            console.log('Creating post card for:', post); // Debug log
             const postCard = createPostCard(post);
             galleryGrid.appendChild(postCard);
         });
@@ -326,16 +367,35 @@ function createPostCard(post) {
     const card = document.createElement('div');
     card.className = 'post-card beautiful-frame fade-in';
     const timestamp = new Date(post.timestamp).toLocaleString();
-    let imgSrc = post.imageUrl || post.imageurl;
-    if (imgSrc && !imgSrc.startsWith('/')) imgSrc = '/' + imgSrc;
+    
+    // Improved image path handling
+    let imgSrc = post.imageUrl || post.imageurl || '';
+    
+    // Ensure the path starts with a forward slash for absolute paths
+    if (imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith('/')) {
+        imgSrc = '/' + imgSrc;
+    }
+    
+    // If no image URL, use a placeholder
+    if (!imgSrc) {
+        imgSrc = '/images/logo.png';
+    }
+    
+    // Format location display
+    const latitude = parseFloat(post.latitude);
+    const longitude = parseFloat(post.longitude);
+    const locationDisplay = post.address || `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+    
     card.innerHTML = `
         <div class="post-image-frame">
-            <img src="${imgSrc}" alt="Destitute photo" class="post-image" onerror="this.onerror=null;this.src='/images/logo.png';">
+            <img src="${imgSrc}" alt="Destitute photo" class="post-image" 
+                 onerror="this.onerror=null; this.src='/images/logo.png'; console.log('Image failed to load:', '${imgSrc}');">
         </div>
         <div class="post-info">
-            <div class="post-location">
+            <div class="post-location clickable-location" data-lat="${latitude}" data-lng="${longitude}">
                 <i class="fas fa-map-marker-alt"></i>
-                <span>${post.address || post.latitude + ', ' + post.longitude}</span>
+                <span>${locationDisplay}</span>
+                <i class="fas fa-external-link-alt location-link-icon"></i>
             </div>
             <div class="post-timestamp">
                 <i class="fas fa-clock"></i>
@@ -343,12 +403,62 @@ function createPostCard(post) {
             </div>
         </div>
     `;
+    
+    // Add click handler to open image in new tab for debugging
+    const img = card.querySelector('.post-image');
+    img.addEventListener('click', () => {
+        console.log('Image clicked:', imgSrc);
+        window.open(imgSrc, '_blank');
+    });
+    
+    // Add click handler for location to open Google Maps
+    const locationElement = card.querySelector('.clickable-location');
+    locationElement.addEventListener('click', () => {
+        const lat = locationElement.getAttribute('data-lat');
+        const lng = locationElement.getAttribute('data-lng');
+        console.log('Opening Google Maps for:', lat, lng);
+        openInMaps(lat, lng);
+    });
+    
     return card;
 }
 
 function openInMaps(latitude, longitude) {
-    const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
-    window.open(url, '_blank');
+    try {
+        // Validate coordinates
+        const lat = parseFloat(latitude);
+        const lng = parseFloat(longitude);
+        
+        if (isNaN(lat) || isNaN(lng)) {
+            console.error('Invalid coordinates:', latitude, longitude);
+            alert('Invalid location coordinates');
+            return;
+        }
+        
+        // Try multiple map providers
+        const mapUrls = [
+            `https://www.google.com/maps?q=${lat},${lng}`,
+            `https://maps.google.com/maps?q=${lat},${lng}`,
+            `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=15`,
+            `https://www.bing.com/maps?cp=${lat}~${lng}&lvl=15`
+        ];
+        
+        // Try to open Google Maps first
+        const googleMapsUrl = mapUrls[0];
+        const mapWindow = window.open(googleMapsUrl, '_blank');
+        
+        if (!mapWindow) {
+            // If popup blocked, try to redirect
+            alert('Popup blocked. Please allow popups for this site to open maps.');
+            window.location.href = googleMapsUrl;
+        }
+        
+        console.log('Opening maps for coordinates:', lat, lng);
+        
+    } catch (error) {
+        console.error('Error opening maps:', error);
+        alert('Unable to open maps. Please try again.');
+    }
 }
 
 // Utility functions

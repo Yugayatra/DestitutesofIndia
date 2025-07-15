@@ -1,0 +1,31 @@
+# Enable image serving
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+</IfModule>
+
+# Set proper headers for images
+<FilesMatch "\.(jpg|jpeg|png|gif)$">
+    Header set Cache-Control "public, max-age=31536000"
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+
+# Ensure uploads directory is accessible
+<Directory "uploads">
+    Options -Indexes
+    Allow from all
+    Require all granted
+</Directory>
+
+# Enable CORS for API
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type"
+</IfModule>
+
+# Handle OPTIONS requests for CORS
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L] 
